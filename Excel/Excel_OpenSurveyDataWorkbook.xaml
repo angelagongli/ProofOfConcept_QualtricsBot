@@ -1,15 +1,17 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Excel_OpenSurveyDataWorkbook" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Excel_OpenSurveyDataWorkbook" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property Name="in_RootDirectoryPath" Type="InArgument(x:String)" />
     <x:Property Name="in_DownloadDirectoryPath" Type="InArgument(x:String)" />
+    <x:Property Name="out_SurveyResponseDataTableArr" Type="OutArgument(sd:DataTable[])" />
+    <x:Property Name="out_SurveyQuestionTextArr" Type="OutArgument(s:String[])" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1102,827.333333333333</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1266.66666666667,3310.66666666667</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Excel_OpenSurveyDataWorkbook_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
-    <sco:Collection x:TypeArguments="x:String">
+    <scg:List x:TypeArguments="x:String" Capacity="30">
       <x:String>System.Activities</x:String>
       <x:String>System.Activities.Statements</x:String>
       <x:String>System.Activities.Expressions</x:String>
@@ -38,10 +40,12 @@
       <x:String>System.ComponentModel</x:String>
       <x:String>System.Runtime.Serialization</x:String>
       <x:String>System.Xml.Serialization</x:String>
-    </sco:Collection>
+      <x:String>System.Reflection</x:String>
+      <x:String>System.Runtime.InteropServices</x:String>
+    </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
-    <sco:Collection x:TypeArguments="AssemblyReference">
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="26">
       <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
@@ -68,28 +72,245 @@
       <AssemblyReference>System.ServiceModel</AssemblyReference>
       <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
       <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
-    </sco:Collection>
+    </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Excel_OpenSurveyDataWorkbook" sap:VirtualizedContainerService.HintSize="476,581.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Excel_OpenSurveyDataWorkbook" sap:VirtualizedContainerService.HintSize="693.333333333333,3246" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:Int32" Name="SurveyQuestionNumber" />
+      <Variable x:TypeArguments="s:String[]" Name="SurveyQuestionCellArr" />
+      <Variable x:TypeArguments="x:String" Name="SurveyDataWorkbookName" />
+    </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:MoveFile ContinueOnError="{x:Null}" Destination="[String.Format(&quot;{0}\SurveyReportData\SummerSchoolSurveyReport_{1}.CSV&quot;, in_RootDirectoryPath, Today.ToString(&quot;MMddyyyy&quot;))]" DisplayName="Move File" sap:VirtualizedContainerService.HintSize="434,162" sap2010:WorkflowViewState.IdRef="MoveFile_1" Overwrite="False" Path="[String.Format(&quot;{0}\Default Report.CSV&quot;, in_DownloadDirectoryPath)]" />
-    <ui:ExcelApplicationScope Password="{x:Null}" DisplayName="Excel Application Scope" sap:VirtualizedContainerService.HintSize="434,287.333333333333" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_1" InstanceCachePeriod="3000" WorkbookPath="[String.Format(&quot;{0}\SurveyReportData\SummerSchoolSurveyReport_{1}.CSV&quot;, in_RootDirectoryPath, Today.ToString(&quot;MMddyyyy&quot;))]">
+    <Assign sap:VirtualizedContainerService.HintSize="651.333333333333,62" sap2010:WorkflowViewState.IdRef="Assign_26">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[SurveyDataWorkbookName]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[String.Format("SummerSchoolSurveyReport_{0}", Today.ToString("MMddyy"))]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:MoveFile ContinueOnError="{x:Null}" Destination="[String.Format(&quot;{0}\SurveyReportData\{1}.CSV&quot;, in_RootDirectoryPath, SurveyDataWorkbookName)]" DisplayName="Move File - Qualtrics Summer School Survey Report" sap:VirtualizedContainerService.HintSize="651.333333333333,162" sap2010:WorkflowViewState.IdRef="MoveFile_1" Overwrite="False" Path="[String.Format(&quot;{0}\Default Report.CSV&quot;, in_DownloadDirectoryPath)]" />
+    <ui:ExcelApplicationScope Password="{x:Null}" DisplayName="Excel Application Scope" sap:VirtualizedContainerService.HintSize="651.333333333333,2850" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_1" InstanceCachePeriod="3000" WorkbookPath="[String.Format(&quot;{0}\SurveyReportData\{1}.CSV&quot;, in_RootDirectoryPath, SurveyDataWorkbookName)]">
       <ui:ExcelApplicationScope.Body>
         <ActivityAction x:TypeArguments="ui:WorkbookApplication">
           <ActivityAction.Argument>
             <DelegateInArgument x:TypeArguments="ui:WorkbookApplication" Name="ExcelWorkbookScope" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="376,178.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="617.333333333333,2741.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_2">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <ui:InvokeVBA OutputValue="{x:Null}" CodeFilePath="[String.Format(&quot;{0}\SummerSchoolSurveyMacroWorkbook.XLSM&quot;, in_RootDirectoryPath)]" DisplayName="Invoke VBA" EntryMethodName="PullQualtricsSurveyReportData" sap:VirtualizedContainerService.HintSize="334,86.6666666666667" sap2010:WorkflowViewState.IdRef="InvokeVBA_1" />
+            <Assign sap:VirtualizedContainerService.HintSize="575.333333333333,62" sap2010:WorkflowViewState.IdRef="Assign_1">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Int32">[SurveyQuestionNumber]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Int32">1</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign sap:VirtualizedContainerService.HintSize="575.333333333333,62" sap2010:WorkflowViewState.IdRef="Assign_2">
+              <Assign.To>
+                <OutArgument x:TypeArguments="s:String[]">[SurveyQuestionCellArr]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="s:String[]">[new String(9){}]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign sap:VirtualizedContainerService.HintSize="575.333333333333,62" sap2010:WorkflowViewState.IdRef="Assign_10">
+              <Assign.To>
+                <OutArgument x:TypeArguments="s:String[]">[out_SurveyQuestionTextArr]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="s:String[]">[new String(9){}]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign sap:VirtualizedContainerService.HintSize="575.333333333333,62" sap2010:WorkflowViewState.IdRef="Assign_15">
+              <Assign.To>
+                <OutArgument x:TypeArguments="sd:DataTable[]">[out_SurveyResponseDataTableArr]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="sd:DataTable[]">[new DataTable(9){}]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:InterruptibleDoWhile DisplayName="Do While - Look Up Q_N for All N in [1, 10]" sap:VirtualizedContainerService.HintSize="575.333333333333,552.666666666667" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_1">
+              <ui:InterruptibleDoWhile.Body>
+                <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="376,383.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <ui:ExcelLookUpRange Range="{x:Null}" DisplayName="LookUp Range - Q_N" sap:VirtualizedContainerService.HintSize="334,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelLookUpRange_1" Result="[SurveyQuestionCellArr(SurveyQuestionNumber - 1)]" SheetName="[SurveyDataWorkbookName]" Value="[&quot;Q&quot; + SurveyQuestionNumber.ToString]" />
+                  <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="334,62.6666666666667" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[String.Format(&quot;Summer School Survey Q{0} Starts in Cell {1}&quot;, SurveyQuestionNumber, SurveyQuestionCellArr(SurveyQuestionNumber - 1))]" />
+                  <Assign sap:VirtualizedContainerService.HintSize="334,62" sap2010:WorkflowViewState.IdRef="Assign_5">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[SurveyQuestionNumber]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">[SurveyQuestionNumber + 1]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                </Sequence>
+              </ui:InterruptibleDoWhile.Body>
+              <ui:InterruptibleDoWhile.Condition>
+                <mva:VisualBasicValue x:TypeArguments="x:Boolean" ExpressionText="SurveyQuestionNumber &lt; 11" sap2010:WorkflowViewState.IdRef="VisualBasicValue`1_3" />
+              </ui:InterruptibleDoWhile.Condition>
+            </ui:InterruptibleDoWhile>
+            <Assign sap:VirtualizedContainerService.HintSize="575.333333333333,62" sap2010:WorkflowViewState.IdRef="Assign_8">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Int32">[SurveyQuestionNumber]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Int32">1</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:InterruptibleDoWhile DisplayName="Do While - Set Survey Question Text/Survey Response Data Cell Range and Pull Survey Response Data for Whole Survey" sap:VirtualizedContainerService.HintSize="575.333333333333,1546.66666666667" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_2">
+              <ui:InterruptibleDoWhile.Body>
+                <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="538.666666666667,1377.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_7">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="x:Int32" Name="SurveyQuestionCellRow" />
+                    <Variable x:TypeArguments="x:String" Name="SurveyResponseDataEndColumn" />
+                    <Variable x:TypeArguments="x:String" Name="SurveyResponseDataCellRange" />
+                  </Sequence.Variables>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <ui:ExcelReadCell Cell="[SurveyQuestionCellArr(SurveyQuestionNumber - 1)]" DisplayName="Read Cell - Survey Question Text" sap:VirtualizedContainerService.HintSize="496.666666666667,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_1" SheetName="[SurveyDataWorkbookName]">
+                    <ui:ExcelReadCell.Result>
+                      <OutArgument x:TypeArguments="x:String">[out_SurveyQuestionTextArr(SurveyQuestionNumber - 1)]</OutArgument>
+                    </ui:ExcelReadCell.Result>
+                  </ui:ExcelReadCell>
+                  <Assign sap:VirtualizedContainerService.HintSize="496.666666666667,62" sap2010:WorkflowViewState.IdRef="Assign_11">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[SurveyQuestionCellRow]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">[CInt(SurveyQuestionCellArr(SurveyQuestionNumber - 1).Substring(1))]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Switch x:TypeArguments="x:Int32" DisplayName="Switch - Set Survey Response Data Cell Range Based on Survey Question Number" Expression="[SurveyQuestionNumber]" sap:VirtualizedContainerService.HintSize="496.666666666667,678.666666666667" sap2010:WorkflowViewState.IdRef="Switch`1_1">
+                    <Assign x:Key="1" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_16">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:H{1}", SurveyQuestionCellRow + 1, SurveyQuestionCellRow + 3)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Sequence x:Key="2" DisplayName="Sequence - Look Up Rightmost Column to Set Survey Response Data Cell Range" sap:VirtualizedContainerService.HintSize="376,280.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_13">
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                      <ui:ExcelLookUpRange DisplayName="LookUp Range - Rightmost Column" sap:VirtualizedContainerService.HintSize="334,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelLookUpRange_2" Range="[String.Format(&quot;A{0}:Z{0}&quot;, SurveyQuestionCellRow + 1)]" Result="[SurveyResponseDataEndColumn]" SheetName="[SurveyDataWorkbookName]" Value="Total" />
+                      <Assign sap:VirtualizedContainerService.HintSize="334,62" sap2010:WorkflowViewState.IdRef="Assign_17">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:String">[String.Format("A{0}:{1}{2}", SurveyQuestionCellRow + 1, SurveyResponseDataEndColumn.Substring(0, 1), SurveyQuestionCellRow + 6)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                    </Sequence>
+                    <Sequence x:Key="3" DisplayName="Sequence - Look Up Rightmost Column to Set Survey Response Data Cell Range" sap:VirtualizedContainerService.HintSize="376,280.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_14">
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                      <ui:ExcelLookUpRange DisplayName="LookUp Range - Rightmost Column" sap:VirtualizedContainerService.HintSize="334,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelLookUpRange_3" Range="[String.Format(&quot;A{0}:Z{0}&quot;, SurveyQuestionCellRow + 1)]" Result="[SurveyResponseDataEndColumn]" SheetName="[SurveyDataWorkbookName]" Value="Total" />
+                      <Assign sap:VirtualizedContainerService.HintSize="334,62" sap2010:WorkflowViewState.IdRef="Assign_18">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:String">[String.Format("A{0}:{1}{2}", SurveyQuestionCellRow + 1, SurveyResponseDataEndColumn.Substring(0, 1), SurveyQuestionCellRow + 4)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                    </Sequence>
+                    <Assign x:Key="4" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_19">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:D{1}", SurveyQuestionCellRow + 1, SurveyQuestionCellRow + 7)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign x:Key="5" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_20">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:A{1}", SurveyQuestionCellRow + 1, CInt(SurveyQuestionCellArr(SurveyQuestionNumber).Substring(1)) - 2)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign x:Key="6" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_21">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:D{1}", SurveyQuestionCellRow + 1, SurveyQuestionCellRow + 7)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign x:Key="7" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_22">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:D{1}", SurveyQuestionCellRow + 1, SurveyQuestionCellRow + 6)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign x:Key="8" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_23">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:A{1}", SurveyQuestionCellRow + 1, CInt(SurveyQuestionCellArr(SurveyQuestionNumber).Substring(1)) - 2)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign x:Key="9" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_24">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:A{1}", SurveyQuestionCellRow + 1, CInt(SurveyQuestionCellArr(SurveyQuestionNumber).Substring(1)) - 2)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign x:Key="10" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_28">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[String.Format("A{0}:K{1}", SurveyQuestionCellRow + 1, SurveyQuestionCellRow + 3)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </Switch>
+                  <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="496.666666666667,62.6666666666667" sap2010:WorkflowViewState.IdRef="WriteLine_4" Text="[&quot;Survey Question Text: &quot; + out_SurveyQuestionTextArr(SurveyQuestionNumber - 1)]" />
+                  <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="496.666666666667,62.6666666666667" sap2010:WorkflowViewState.IdRef="WriteLine_5" Text="[&quot;Survey Response Data Cell Range: &quot; + SurveyResponseDataCellRange]" />
+                  <ui:ExcelReadRange AddHeaders="True" DataTable="[out_SurveyResponseDataTableArr(SurveyQuestionNumber - 1)]" DisplayName="Read Range - Pull Survey Question's Response Data" sap:VirtualizedContainerService.HintSize="496.666666666667,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadRange_2" Range="[SurveyResponseDataCellRange]" SheetName="[SurveyDataWorkbookName]" />
+                  <Assign sap:VirtualizedContainerService.HintSize="496.666666666667,62" sap2010:WorkflowViewState.IdRef="Assign_9">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[SurveyQuestionNumber]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">[SurveyQuestionNumber + 1]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                </Sequence>
+              </ui:InterruptibleDoWhile.Body>
+              <ui:InterruptibleDoWhile.Condition>
+                <mva:VisualBasicValue x:TypeArguments="x:Boolean" ExpressionText="SurveyQuestionNumber &lt; 11" sap2010:WorkflowViewState.IdRef="VisualBasicValue`1_4" />
+              </ui:InterruptibleDoWhile.Condition>
+            </ui:InterruptibleDoWhile>
           </Sequence>
         </ActivityAction>
       </ui:ExcelApplicationScope.Body>
