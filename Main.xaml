@@ -64,6 +64,7 @@
       <Variable x:TypeArguments="ui:Browser" Name="QualtricsBrowser" />
       <Variable x:TypeArguments="sd:DataTable[]" Name="SurveyResponseDataTableArr" />
       <Variable x:TypeArguments="s:String[]" Name="SurveyQuestionTextArr" />
+      <Variable x:TypeArguments="x:String" Name="SurveyResponseTotal" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -82,6 +83,9 @@
         <InArgument x:TypeArguments="ui:Browser" x:Key="in_QualtricsBrowser">
           <mva:VisualBasicValue x:TypeArguments="ui:Browser" ExpressionText="QualtricsBrowser" />
         </InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_SurveyResponseTotal">
+          <mva:VisualBasicReference x:TypeArguments="x:String" ExpressionText="SurveyResponseTotal" />
+        </OutArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
     <Sequence DisplayName="Sequence - Set Root Directory Path/Download Directory Path" sap:VirtualizedContainerService.HintSize="632,721.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_2">
@@ -135,6 +139,9 @@
         </InArgument>
         <InArgument x:TypeArguments="sd:DataTable[]" x:Key="in_SurveyResponseDataTableArr">
           <mva:VisualBasicValue x:TypeArguments="sd:DataTable[]" ExpressionText="SurveyResponseDataTableArr" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SurveyResponseTotal">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="SurveyResponseTotal" />
         </InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
