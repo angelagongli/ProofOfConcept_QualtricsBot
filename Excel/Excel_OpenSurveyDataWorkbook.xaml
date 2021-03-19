@@ -8,7 +8,7 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1266.66666666667,3310.66666666667</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1266.66666666667,3692</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Excel_OpenSurveyDataWorkbook_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="30">
@@ -74,11 +74,12 @@
       <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Excel_OpenSurveyDataWorkbook" sap:VirtualizedContainerService.HintSize="693.333333333333,3246" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Excel_OpenSurveyDataWorkbook" sap:VirtualizedContainerService.HintSize="693.333333333333,3627.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:Int32" Name="SurveyQuestionNumber" />
       <Variable x:TypeArguments="s:String[]" Name="SurveyQuestionCellArr" />
       <Variable x:TypeArguments="x:String" Name="SurveyDataWorkbookName" />
+      <Variable x:TypeArguments="x:Boolean" Name="QualtricsSurveyReportFolderExists" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -93,14 +94,28 @@
         <InArgument x:TypeArguments="x:String">[String.Format("SummerSchoolSurveyReport_{0}", Today.ToString("MMddyy"))]</InArgument>
       </Assign.Value>
     </Assign>
+    <ui:PathExists DisplayName="Path Exists - Qualtrics Summer School Survey Report Folder" Exists="[QualtricsSurveyReportFolderExists]" sap:VirtualizedContainerService.HintSize="651.333333333333,90.6666666666667" sap2010:WorkflowViewState.IdRef="PathExists_1" Path="[String.Format(&quot;{0}\SurveyReportData&quot;, in_RootDirectoryPath)]" PathType="Folder" />
+    <If Condition="[QualtricsSurveyReportFolderExists]" sap:VirtualizedContainerService.HintSize="651.333333333333,429.333333333333" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Else>
+        <Sequence DisplayName="Sequence - Create Qualtrics Summer School Survey Report Folder" sap:VirtualizedContainerService.HintSize="376,275.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_16">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder" sap:VirtualizedContainerService.HintSize="334,80.6666666666667" sap2010:WorkflowViewState.IdRef="CreateDirectory_1" Path="[String.Format(&quot;{0}\SurveyReportData&quot;, in_RootDirectoryPath)]" />
+          <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="334,62.6666666666667" sap2010:WorkflowViewState.IdRef="WriteLine_7" Text="Qualtrics Survey Report Folder Created!" />
+        </Sequence>
+      </If.Else>
+    </If>
     <ui:MoveFile ContinueOnError="{x:Null}" Destination="[String.Format(&quot;{0}\SurveyReportData\{1}.CSV&quot;, in_RootDirectoryPath, SurveyDataWorkbookName)]" DisplayName="Move File - Qualtrics Summer School Survey Report" sap:VirtualizedContainerService.HintSize="651.333333333333,162" sap2010:WorkflowViewState.IdRef="MoveFile_1" Overwrite="False" Path="[String.Format(&quot;{0}\Default Report.CSV&quot;, in_DownloadDirectoryPath)]" />
-    <ui:ExcelApplicationScope Password="{x:Null}" DisplayName="Excel Application Scope" sap:VirtualizedContainerService.HintSize="651.333333333333,2850" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_1" InstanceCachePeriod="3000" WorkbookPath="[String.Format(&quot;{0}\SurveyReportData\{1}.CSV&quot;, in_RootDirectoryPath, SurveyDataWorkbookName)]">
+    <ui:ExcelApplicationScope Password="{x:Null}" DisplayName="Excel Application Scope" sap:VirtualizedContainerService.HintSize="651.333333333333,2631.33333333333" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_1" InstanceCachePeriod="3000" WorkbookPath="[String.Format(&quot;{0}\SurveyReportData\{1}.CSV&quot;, in_RootDirectoryPath, SurveyDataWorkbookName)]">
       <ui:ExcelApplicationScope.Body>
         <ActivityAction x:TypeArguments="ui:WorkbookApplication">
           <ActivityAction.Argument>
             <DelegateInArgument x:TypeArguments="ui:WorkbookApplication" Name="ExcelWorkbookScope" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="617.333333333333,2741.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="617.333333333333,2522.66666666667" sap2010:WorkflowViewState.IdRef="Sequence_2">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -170,9 +185,9 @@
                 <InArgument x:TypeArguments="x:Int32">1</InArgument>
               </Assign.Value>
             </Assign>
-            <ui:InterruptibleDoWhile DisplayName="Do While - Set Survey Question Text/Survey Response Data Cell Range and Pull Survey Response Data for Whole Survey" sap:VirtualizedContainerService.HintSize="575.333333333333,1546.66666666667" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_2">
+            <ui:InterruptibleDoWhile DisplayName="Do While - Set Survey Question Text/Survey Response Data Cell Range and Pull Survey Response Data for Whole Survey" sap:VirtualizedContainerService.HintSize="575.333333333333,1328" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_2">
               <ui:InterruptibleDoWhile.Body>
-                <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="538.666666666667,1377.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_7">
+                <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="538.666666666667,1158.66666666667" sap2010:WorkflowViewState.IdRef="Sequence_7">
                   <Sequence.Variables>
                     <Variable x:TypeArguments="x:Int32" Name="SurveyQuestionCellRow" />
                     <Variable x:TypeArguments="x:String" Name="SurveyResponseDataEndColumn" />
@@ -196,7 +211,7 @@
                       <InArgument x:TypeArguments="x:Int32">[CInt(SurveyQuestionCellArr(SurveyQuestionNumber - 1).Substring(1))]</InArgument>
                     </Assign.Value>
                   </Assign>
-                  <Switch x:TypeArguments="x:Int32" DisplayName="Switch - Set Survey Response Data Cell Range Based on Survey Question Number" Expression="[SurveyQuestionNumber]" sap:VirtualizedContainerService.HintSize="496.666666666667,678.666666666667" sap2010:WorkflowViewState.IdRef="Switch`1_1">
+                  <Switch x:TypeArguments="x:Int32" DisplayName="Switch - Set Survey Response Data Cell Range Based on Survey Question Number" Expression="[SurveyQuestionNumber]" sap:VirtualizedContainerService.HintSize="496.666666666667,460" sap2010:WorkflowViewState.IdRef="Switch`1_1">
                     <Assign x:Key="1" sap:VirtualizedContainerService.HintSize="262,62" sap2010:WorkflowViewState.IdRef="Assign_16">
                       <Assign.To>
                         <OutArgument x:TypeArguments="x:String">[SurveyResponseDataCellRange]</OutArgument>
