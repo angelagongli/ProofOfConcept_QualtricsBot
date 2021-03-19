@@ -3,11 +3,12 @@
     <x:Property Name="in_RootDirectoryPath" Type="InArgument(x:String)" />
     <x:Property Name="in_SurveyQuestionTextArr" Type="InArgument(s:String[])" />
     <x:Property Name="in_SurveyResponseDataTableArr" Type="InArgument(sd:DataTable[])" />
+    <x:Property Name="in_SurveyResponseTotal" Type="InArgument(x:String)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1266.66666666667,891.333333333333</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1266.66666666667,1602</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Excel_EnterSurveyData_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="32">
@@ -71,7 +72,7 @@
       <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Excel_EnterSurveyData" sap:VirtualizedContainerService.HintSize="454.666666666667,826.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Excel_EnterSurveyData" sap:VirtualizedContainerService.HintSize="454.666666666667,1537.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:Int32" Name="SurveyQuestionNumber" />
     </Sequence.Variables>
@@ -80,6 +81,17 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
+    <Sequence DisplayName="Sequence - Enter All Qualtrics Summer School Survey Metadata" sap:VirtualizedContainerService.HintSize="412.666666666667,670.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_8">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:WriteCell Cell="A1" DisplayName="Write Cell - Qualtrics Summer School Survey Report Date Label" sap:VirtualizedContainerService.HintSize="334,114.666666666667" sap2010:WorkflowViewState.IdRef="WriteCell_2" SheetName="Summer School Survey Data" Text="Qualtrics Summer School Survey Report Date:" WorkbookPath="[String.Format(&quot;{0}\SummerSchoolSurveyData.XLSX&quot;, in_RootDirectoryPath)]" />
+      <ui:WriteCell Cell="B1" DisplayName="Write Cell - Qualtrics Summer School Survey Report Date" sap:VirtualizedContainerService.HintSize="334,114.666666666667" sap2010:WorkflowViewState.IdRef="WriteCell_3" SheetName="Summer School Survey Data" Text="[Today.ToString(&quot;MM/dd/yyyy&quot;)]" WorkbookPath="[String.Format(&quot;{0}\SummerSchoolSurveyData.XLSX&quot;, in_RootDirectoryPath)]" />
+      <ui:WriteCell Cell="A2" DisplayName="Write Cell - Qualtrics Summer School Survey Response Total Label" sap:VirtualizedContainerService.HintSize="334,114.666666666667" sap2010:WorkflowViewState.IdRef="WriteCell_4" SheetName="Summer School Survey Data" Text="Qualtrics Summer School Survey Response Total:" WorkbookPath="[String.Format(&quot;{0}\SummerSchoolSurveyData.XLSX&quot;, in_RootDirectoryPath)]" />
+      <ui:WriteCell Cell="B2" DisplayName="Write Cell - Qualtrics Summer School Survey Response Total" sap:VirtualizedContainerService.HintSize="334,114.666666666667" sap2010:WorkflowViewState.IdRef="WriteCell_5" SheetName="Summer School Survey Data" Text="[in_SurveyResponseTotal]" WorkbookPath="[String.Format(&quot;{0}\SummerSchoolSurveyData.XLSX&quot;, in_RootDirectoryPath)]" />
+    </Sequence>
     <Assign sap:VirtualizedContainerService.HintSize="412.666666666667,62" sap2010:WorkflowViewState.IdRef="Assign_4">
       <Assign.To>
         <OutArgument x:TypeArguments="x:Int32">[SurveyQuestionNumber]</OutArgument>
