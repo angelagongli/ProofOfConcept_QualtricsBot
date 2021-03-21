@@ -6,7 +6,7 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1266.66666666667,1494</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1266.66666666667,1648</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="26">
@@ -59,7 +59,7 @@
       <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="674,1429.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="674,1583.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="ui:Browser" Name="QualtricsBrowser" />
       <Variable x:TypeArguments="sd:DataTable[]" Name="SurveyResponseDataTableArr" />
@@ -142,6 +142,13 @@
         </InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_SurveyResponseTotal">
           <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="SurveyResponseTotal" />
+        </InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Excel_RecreateQualtricsVisualization workflow" sap:VirtualizedContainerService.HintSize="632,114" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="Excel\Excel_RecreateQualtricsVisualization.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RootDirectoryPath">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_RootDirectoryPath" />
         </InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
